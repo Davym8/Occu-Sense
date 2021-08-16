@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-def LightDetection():
+class LightDetection:
  
  #GPIO set Mode
  GPIO.setwarnings(False)
