@@ -1,5 +1,5 @@
 #$sudo pip3 install Adafruit_DHT
-#reguirement - need DHT library 
+#requirement - need DHT library 
 
 from time import sleep
 import RPi.GPIO as GPIO
@@ -21,16 +21,30 @@ GPIO.setup(HVAC,GPIO.OUT)
 
 SET_TEMP = 24
 
-def controlHVAC_on():
+def controlHVAC_on(tries):
 
-	#ToDO - what if sensor fail, need default
 	hum, temp = Adafruit_DHT.read_retry(DHT_SENSOR, DHT)
-	
+	tries = tries
+
 	if temp is not none:
 		if temp < SET_TEMP:
 			GPIO.output(HVAC, GPIO.HIGH)
 		elif temp > SET_TEMP:
 			GPIO.output(HVAC, GPIO.LOW)
+
+	else:
+		while tries > 0:
+			sleep(1000)
+			tries -= 1
+			controlHVAC_on(tries)
+		
+		#if thermometer fail, turn on hvac
+		#and use hvac thermomoter	
+		GPIO.output(HVAC, GPIO.HIGH)
+		print('thermomoter failed - please check')
+
+
+
 
 def controlHVAC_off():
 
@@ -48,21 +62,25 @@ def controlHVAC_off():
 
 
 
+def main():
 
-try:
-	#motion detected - controlHVAC_on
-	GPIO.add_event_detect(PIR, GPIO.RISING, callback=controlHVAC_on)
-	#no motion dtected - controlHVAC_off
-	GPIO.add_event_detect(PIR, GPIO.FALLING, callback=controlHVAC)
-	
-	while true:
-		#wait for change in motion
-		time.sleep(20)
+	try:
+		#motion detected - controlHVAC_on
+		GPIO.add_event_detect(PIR, GPIO.RISING, callback=lambda x: controlHVAC_on(10))
+		#no motion dtected - controlHVAC_off
+		GPIO.add_event_detect(PIR, GPIO.FALLING, callback=controlHVAC_off)
+		
+		while true:
+			#wait for change in motion
+			time.sleep(20)
 
 
-except KeyboardInterrupt:
-	print("exit")
-	sys.exit()
-	GPIO.cleanup()
+	except KeyboardInterrupt:
+		print("exit")
+		sys.exit()
+		GPIO.cleanup()
 
+
+if __name__ == '--main__':
+	main()
 
