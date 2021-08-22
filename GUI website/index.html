@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GUI</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script script src="https://unpgk.com/Vue"></script>
+        <link rel="stylesheet" type="text/css" href="stylesheet.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="Header">
+                <div class=navbar>
+                    <h1>Climate Control system</h1>
+                </div>
+            </div>
+            <div class="Sidebar">
+                <div class="data">
+                    <h1>Climate controls</h1>
+                    <form id="senddata" action="https://www.google.com" method="post" target="_blank" @submit.prevent="processform">
+                        <label for="fname">First name:</label>
+                        <input type="text" id="fname" name="fname" v-model="fname"><br><br>
+                    
+                        <label for="lname">Last name:</label>
+                        <input type="text" id="lname" name="lname" v-model="lname"><br><br>
+
+                        <label for="activatelights">Activate lights:</label>
+                        <input type="checkbox" id="activatelights" value="true" v-model="check" >
+                        {{check ? "On" : "Off"}}
+
+                        <label for="triggerheater">Activate Heater:</label>
+                        <input type="checkbox" id="triggerheater" value="true"  v-model="checked">
+                        {{checked ? "On" : "Off"}}
+
+                        <label for="triggeraircon">Activate Aircon:</label>
+                        <input type="checkbox" id="triggeraircon" value="true" v-model="checkers">
+                        {{checkers ? "On" : "Off"}}
+                        <br><br>
+                        <input type="submit" value="Submit">
+
+                    </form>
+                    <p>Click on the submit button to process your request.</p>
+                </div>
+            </div>
+            <div class="Main-content">
+                <div class="content">
+                    <h1>Facial Recognition Security Feed</h1>
+                </div>
+                <div class="vid">
+                    <img id="bg" src="{{ url_for('video_feed') }}">
+                </div>
+            </div>
+            <div class="rightbar"></div>
+          </div>
+    </body>
+    <script>    
+        new Vue({
+        el: '#senddata',
+        data: {
+        fname: '',
+        lname:'',
+        check: false,
+        checked: false,
+        checkers: false
+        },
+        methods: {
+            processform: function(){
+                console.log({fname: this.fname, lname: this.lname, check: this.check, checked: this.checked, checkers: this.checkers,})
+            }
+        }
+    })
+    </script>
+</html>
