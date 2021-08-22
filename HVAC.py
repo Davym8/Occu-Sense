@@ -28,7 +28,7 @@ headers = {'Content-Type': 'application/json'}
 DHT_SENSOR = Adafruit_DHT.DHT22
 
 GPIO.setmode(GPIO.BCM)
-PIR = 18
+PIR = 16
 DHT = 15
 
 GPIO.setup(PIR,GPIO.IN)
