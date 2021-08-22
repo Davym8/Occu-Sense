@@ -8,10 +8,14 @@ on_payload = "{\"on\":true}"
 off_payload = "{\"on\":false}"
 headers = {'Content-Type':'text/plain'}
 
+
 class LightDetection:
     #GPIO set Mode
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
+    
+    #logging begin
+    Serial.begin(9600)
 
     #set GPIO Pins
     PIR = 18 
@@ -24,9 +28,11 @@ class LightDetection:
         if(GPIO.input(PIR)):
             r = requests.put(url, headers=headers, data=on_payload)
             #Time delay 10 minutes
+            Serial.println(“Motion detected”)
             sleep(600)
             #Uncomment this delay for testing
             #sleep(5)
         else:
             #when no motion detected turn off light
+            Serial.println(“No Motion detected”)
             r = requests.put(url, headers=headers, data=off_payload)
