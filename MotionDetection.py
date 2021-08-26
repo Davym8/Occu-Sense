@@ -49,7 +49,7 @@ def controlHVAC_on():
     if temp is not None:
         if temp < SET_TEMP - 2:
             r = requests.put(ur2, headers=headers, data=on_payload2)
-        elif temp > SET_TEMP - 2:
+        elif temp > SET_TEMP + 2:
             r = requests.put(url2, headers=headers, data=off_payload2)
 
 
