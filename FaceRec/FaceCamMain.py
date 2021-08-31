@@ -89,6 +89,47 @@ def livestream():
     @app.route('/video_feed')
     def video_feed():
         return Response(gen(video_camera),mimetype='multipart/x-mixed-replace; boundary=frame')
+
+    #####################################
+    #will need to check if this works
+    @app.route("/<deviceName>/<action>")
+    def action(deviceName, action): 
+    if deviceName == 'lights':
+        
+        # HTTP PUT data for light
+        url = "http://192.168.1.114:80/api/6A69BD6601/lights/2/state"
+        on_payload = "{\"on\":true}"
+        off_payload = "{\"on\":false}"
+        headers = {'Content-Type':'text/plain'}
+    
+    if deviceName == 'hvac':
+        
+        #HTTP PUT data for hvac
+        url = "https://wap.tplinkcloud.com?token=5b2a0cda-CTWBN5xjydqNigFZK0bVONb"
+        on_payload = json.dumps({
+            "method": "passthrough",
+            "params": {
+                "deviceId": "8006271D01FC0ED5250D5FBA3AF2B79B1E6452F1",
+                "requestData": "{\"system\":{\"set_relay_state\":{\"state\":1}}}"
+          }
+        })
+        off_payload = json.dumps({
+            "method": "passthrough",
+            "params": {
+                "deviceId": "8006271D01FC0ED5250D5FBA3AF2B79B1E6452F1",
+                "requestData": "{\"system\":{\"set_relay_state\":{\"state\":0}}}"
+          }
+        })
+        headers = {'Content-Type': 'application/json'}
+
+    if action == 'on':
+        payload = on_payload
+    if action == 'off':
+        payload == off_payload
+
+    #set device to action
+    r = requests.put(url, headers=headers, data=payload) 
+    ####################################################
         
     #this initialises the functions while continuing the other with threads
     #the flask app will not shut down unless manually shut or a sig is used
@@ -97,8 +138,8 @@ def livestream():
         t.daemon = True
         t.start()
         app.run(host='0.0.0.0', debug=False, threaded=True)
-   
-                
+
+    
 #called if the person is known and sends an email MUST CREATE IFTTT APPLET FOR THIS
 def webpostgood():
     global last_epochs
