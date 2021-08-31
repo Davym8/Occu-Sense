@@ -26,17 +26,20 @@
 
                         <label for="activatelights">Activate lights:</label>
                         <input type="checkbox" id="activatelights" value="true" v-model="check" >
-                        <a href = "/lights/on"></a>
+                        <script> var selection ="/lights/" + {check ? "On" : "Off"}; </script>
+                        <a href = selection ></a>
                         {{check ? "On" : "Off"}}
 
                         <label for="triggerheater">Activate Heater:</label>
                         <input type="checkbox" id="triggerheater" value="true"  v-model="checked">
-                        <a href = "/hvac/on"></a>
+                        <script> var selection ="/hvac/" + {check ? "On" : "Off"}; </script>
+                        <a href = selection ></a>
                         {{checked ? "On" : "Off"}}
 
                         <label for="triggeraircon">Activate Aircon:</label>
                         <input type="checkbox" id="triggeraircon" value="true" v-model="checkers">
-                        <a href = "/hvac/on"></a>
+                        <script> var selection ="/hvac/" + {check ? "On" : "Off"}; </script>
+                        <a href = selection ></a>
                         {{checkers ? "On" : "Off"}}
                         <br><br>
                         <input type="submit" value="Submit">
