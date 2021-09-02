@@ -80,7 +80,21 @@
                     <img id="bg" src="{{ url_for('video_feed') }}">
                 </div>
             </div>
-            <div class="rightbar"></div>
+            <div class="rightbar">
+                <div class="shtdwn">
+                    <h1>Shutdown Server</h1>
+                    <form id="setdata" action="google.com" method="post" target="_blank" @submit.prevent="shutdownform">
+                        <label for="Username">Username:</label>
+                        <input type="text" id="usr" name="usr" v-model="usr"><br><br>
+                        
+                        <label for="pwd">Last name:</label>
+                        <input type="text" id="pwd" name="pwd" v-model="pwd"><br><br>
+                        <br><br>
+                        <input type="submit" value="Submit">
+                    </form>
+                    <p>Click on the submit button to shutdown the server.</p>
+                </div>
+            </div>
           </div>
     </body>
     <script>    
@@ -96,6 +110,19 @@
         methods: {
             processform: function(){
                 console.log({fname: this.fname, lname: this.lname, check: this.check, checked: this.checked, checkers: this.checkers,})
+            }
+        }
+    })
+        
+        new Vue({
+        el: '#setdata',
+        data: {
+            usr:'',
+            pwd:''
+        },
+        methods: {
+            shutdownform: function(){
+                console.log({usr: this.usr, pwd: this.pwd})
             }
         }
     })
