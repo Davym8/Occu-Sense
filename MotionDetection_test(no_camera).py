@@ -38,8 +38,14 @@ def HVAC_on():
     if temp is not None:
         if temp < SET_TEMP - 2:
             r = requests.put(ur2, headers=headers, data=on_payload2)
+            print("HVAC is on")
+            print("Target: {} and actual is {}, with the range allowed being 2 Degrees".format(SET_TEMP, temp))
+            print()
         elif temp > SET_TEMP + 2:
             r = requests.put(url2, headers=headers, data=off_payload2)
+            print("HVAC is off")
+            print("Target: {} and actual is {}, with the range allowed being 2 Degrees".format(SET_TEMP, temp))
+            print()
 
 def HVAC_off():
     off_payload2 = json.dumps({
@@ -68,15 +74,16 @@ while True:
   i = GPIO.input(GPIO_PIR_Input)
   if i == 0:
     light_off() #Switch off light
-    HVAC_off() #Switch off HVAC 
-    time.sleep(15)
+    print("light is off")
+    HVAC_off() #Switch off HVAC
+    print("HVAC is off")
+    print()
+    time.sleep(5)
     
   time.sleep(0.1)
     
   if i == 1:
     light_on() #Switch on light
+    print("light is on")
     HVAC_on() #Check if HVAC should be on or not
     time.sleep(15)
-
-#Can use 'from gpiozero import MotionSensor'
-#Allows 'pir.wait_for_motion()' and 'pir.wait_for_no_motion()'

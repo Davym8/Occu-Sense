@@ -7,13 +7,16 @@ import cv2
 import sys
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-from flask import Flask, render_template, Response
+from flask import *
 from cameras import VideoCamera
 from flask_basicauth import BasicAuth
 import pickle
 import time
 import threading
 import requests
+username = 'admin'
+pwd = 'pwd'
+genCam = True
 """
 Then we will define our global variables for use
 
@@ -75,22 +78,55 @@ def livestream():
     
     #this shows the route of the app and returns the index html file which will be used for creating a webpage with the video stream
     
-    @app.route('/')
+    @app.route("/")
     @basic_auth.required
     def index():
         return render_template('index.html')
-
+    
+    @app.route("/", methods = ['POST', 'GET'])
+    def shutdown_server():
+        if request.method == "POST":
+            return render_template('shutdown.html')
+            usrinput = request.form['usr']
+            usrpassword = request.form['pwd']
+            if usrinput != username:
+                return "Username or Password is incorrect!"
+            if usrpassword != pwd:
+                return "Username or Password is incorrect!" 
+            print("Server is shutting down")
+            ####
+            genCam = False
+            ###
+            shutdown = request.environ.get('werkzeug.server.shutdown')
+            if shutdown is None:
+                raise RuntimeError("Error Shutdown failed")
+            else:
+                shutdown()
+                return redirect(url_for("shutdown.html", command))
+        else:
+            return 'You need authorization to shut the server down!'
+        
+    
+    
     def gen(camera):
-        while True:
-            frame = camera.get_frame()
+        while genCam:
+            frame = camera.get_frame() 
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+            
+            
+    
+    
             
     @app.route('/video_feed')
     def video_feed():
         return Response(gen(video_camera),mimetype='multipart/x-mixed-replace; boundary=frame')
-
-    #####################################
+    
+    @app.route("/<shutdown>")
+    def shutdown():
+        return #f"<h1>{shutdown}</h1>"
+     
+    
     #will need to check if this works
     @app.route("/<deviceName>/<action>")
     def action(deviceName, action): 
@@ -128,18 +164,20 @@ def livestream():
             payload == off_payload
 
         #set device to action
-        r = requests.put(url, headers=headers, data=payload) 
+        r = requests.put(url, headers=headers, data=payload)
+        print(r)
         ####################################################
             
-        #this initialises the functions while continuing the other with threads
-        #the flask app will not shut down unless manually shut or a sig is used
-        if __name__ == '__main__':   
-            t = threading.Thread(target=check_for_objects, args=())
-            t.daemon = True
-            t.start()
-            app.run(host='0.0.0.0', debug=False, threaded=True)
-
-    
+      
+    #this initialises the functions while continuing the other with threads
+    #the flask app will not shut down unless manually shut or a sig is used
+    if __name__ == '__main__':   
+        t = threading.Thread(target=check_for_objects, args=())
+        t.daemon = True
+        t.start()
+        app.run(host='127.0.0.1', port = 8000, debug=False, threaded=True)
+   
+                
 #called if the person is known and sends an email MUST CREATE IFTTT APPLET FOR THIS
 def webpostgood():
     global last_epochs
@@ -217,9 +255,13 @@ def facerec():
     cv2.destroyAllWindows()
 
 
-try:
-    while True:
-        facerec()
+livestream()
+
+
+
+#try:
+   # while True:
+      #  facerec()
         #livestream()# this will start the stream and another recog system
-except KeyboardInterrupt:    
-    exit()
+#except KeyboardInterrupt:    
+  #  exit()
