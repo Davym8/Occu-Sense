@@ -37,6 +37,37 @@ email_interval = 120
 Positive_Ident = False
 Negative_Ident = False
 
+#Light and HVAC url, headers and payloads
+#####################################################
+light_url = "http://192.168.1.114:80/api/6A69BD6601/lights/2/state"
+light_headers = {'Content-Type':'text/plain'}
+light_on_payload = "{\"on\":true}"
+light_off_payload = "{\"on\":false}"
+
+hvac_url = "https://wap.tplinkcloud.com?token=5b2a0cda-CTWBN5xjydqNigFZK0bVONb"
+hvac_check_payload = json.dumps({
+                                "method": "passthrough",
+                                "params": {
+                                    "deviceId": "8006271D01FC0ED5250D5FBA3AF2B79B1E6452F1",
+                                    "requestData": "{\"emeter\":{\"get_realtime\":{}}}"
+                                }
+                                })
+hvac_headers = {'Content-Type': 'application/json'}
+hvac_on_payload = json.dumps({
+                                "method": "passthrough",
+                                "params": {
+                                    "deviceId": "8006271D01FC0ED5250D5FBA3AF2B79B1E6452F1",
+                                    "requestData": "{\"system\":{\"set_relay_state\":{\"state\":1}}}"
+                            }
+                            })
+hvac_off_payload = json.dumps({
+                                "method": "passthrough",
+                                "params": {
+                                    "deviceId": "8006271D01FC0ED5250D5FBA3AF2B79B1E6452F1",
+                                    "requestData": "{\"system\":{\"set_relay_state\":{\"state\":0}}}"
+                            }
+                            })
+######################################################
 
 #Runs webserver and object/face reocgnition, using the classifiers below,
 #we initialise the video camera by calling it then setup the flask server using app and credentials
@@ -111,81 +142,34 @@ def livestream():
                 checked = request.form['checked']   #HVAC
                 checkers = request.form['checkers']   #HVAC cool/ AIrcon
                 
-                getLight = #use request to get state
-                getHvac  = #use request to get state
-
-
+                ##########
+                #need to implement method
+                #getLight = lightControler.getLight()
+                
                 if check == True and getLight == False:
-                    # HTTP PUT data for light
-                    url = "http://192.168.1.114:80/api/6A69BD6601/lights/2/state"
-                    on_payload = "{\"on\":true}"
-                    payload = on_payload
-                    headers = {'Content-Type':'text/plain'}
-
                     #set device to action
-                    r = requests.put(url, headers=headers, data=payload)
-                    print(r)
+                    r = requests.put(light_url, headers=light_headers, data=light_on_payload)
                     lights = True
 
                 elif check == False and getLight == True:
-                    # HTTP PUT data for light
-                    url = "http://192.168.1.114:80/api/6A69BD6601/lights/2/state"
-                    off_payload = "{\"on\":false}"
-                    payload = off_payload
-                    headers = {'Content-Type':'text/plain'}
-
                     #set device to action
-                    r = requests.put(url, headers=headers, data=payload)
-                    print(r)
+                    r = requests.put(light_url, headers=light_headers, data=light_off_payload)
                     lights = False
-                
-                url = "https://wap.tplinkcloud.com?token=5b2a0cda-CTWBN5xjydqNigFZK0bVONb"
-                payload = on_payload = json.dumps({
-                        "method": "passthrough",
-                        "params": {
-                            "deviceId": "8006271D01FC0ED5250D5FBA3AF2B79B1E6452F1",
-                            "requestData": "{\"emeter\":{\"get_realtime\":{}}}"
-                        }
-                        })
-                headers = {'Content-Type': 'application/json'}
 
-                getHvac = requests.put(url, headers=headers, data=payload)
                 #check return value/type for getHvac
+                getHvac = requests.put(hvac_url, headers=hvac_headers, data=hvac_check_payload)
 
                 if (checked == True or checkers == True) and getHvac == 0:
-                    #HTTP PUT data for hvac
-                    
-                    on_payload = json.dumps({
-                        "method": "passthrough",
-                        "params": {
-                            "deviceId": "8006271D01FC0ED5250D5FBA3AF2B79B1E6452F1",
-                            "requestData": "{\"system\":{\"set_relay_state\":{\"state\":1}}}"
-                    }
-                    })
-                    payload = on_payload
                     #set device to action
-                    r = requests.put(url, headers=headers, data=payload)
-                    print(r) 
+                    r = requests.put(hvac_url, headers=hvac_headers, data=hvac_on_payload) 
                     hvac = True
 
 
                 elif (checked == False or checkers == False) and getHvac == 1:
-
-                    #HTTP PUT data for hvac
-                    off_payload = json.dumps({
-                        "method": "passthrough",
-                        "params": {
-                            "deviceId": "8006271D01FC0ED5250D5FBA3AF2B79B1E6452F1",
-                            "requestData": "{\"system\":{\"set_relay_state\":{\"state\":0}}}"
-                    }
-                    })
-                    payload = off_payload
-
-
                     #set device to action
-                    r = requests.put(url, headers=headers, data=payload)
-                    print(r)
+                    r = requests.put(hvac_url, headers=hvac_headers, data=hvac_off_payload)
                     hvac = False
+
 
                 returnData = {
                     'lights'  : lights,
@@ -215,49 +199,7 @@ def livestream():
     @app.route("/<shutdown>")
     def shutdown():
         return #f"<h1>{shutdown}</h1>"
-     
-    '''
-    #needs chnging to form POST method
-    @app.route("/<deviceName>/<action>")
-    def action(deviceName, action): 
-        if deviceName == 'lights':
-            
-            # HTTP PUT data for light
-            url = "http://192.168.1.114:80/api/6A69BD6601/lights/2/state"
-            on_payload = "{\"on\":true}"
-            off_payload = "{\"on\":false}"
-            headers = {'Content-Type':'text/plain'}
         
-        if deviceName == 'hvac':
-            
-            #HTTP PUT data for hvac
-            url = "https://wap.tplinkcloud.com?token=5b2a0cda-CTWBN5xjydqNigFZK0bVONb"
-            on_payload = json.dumps({
-                "method": "passthrough",
-                "params": {
-                    "deviceId": "8006271D01FC0ED5250D5FBA3AF2B79B1E6452F1",
-                    "requestData": "{\"system\":{\"set_relay_state\":{\"state\":1}}}"
-              }
-            })
-            off_payload = json.dumps({
-                "method": "passthrough",
-                "params": {
-                    "deviceId": "8006271D01FC0ED5250D5FBA3AF2B79B1E6452F1",
-                    "requestData": "{\"system\":{\"set_relay_state\":{\"state\":0}}}"
-              }
-            })
-            headers = {'Content-Type': 'application/json'}
-
-        if action == 'on':
-            payload = on_payload
-        if action == 'off':
-            payload == off_payload
-
-        #set device to action
-        r = requests.put(url, headers=headers, data=payload)
-        print(r)
-        ####################################################
-        '''    
       
     #this initialises the functions while continuing the other with threads
     #the flask app will not shut down unless manually shut or a sig is used
