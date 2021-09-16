@@ -14,6 +14,7 @@ import pickle
 import time
 import threading
 import requests
+import json
 username = 'admin'
 pwd = 'pwd'
 genCam = True
@@ -143,9 +144,12 @@ def livestream():
                 checkers = request.form['checkers']   #HVAC cool/ AIrcon
                 
                 ##########
-                #need to implement method
-                #getLight = lightControler.getLight()
-                
+                #need to check get request
+                getLight = requests.get("http://192.168.1.114:80/api/6A69BD6601/lights/2")
+                getLight = json.loads(getLight) 
+                #boolean val           
+                getLight = getlight["state"]["on"]
+
                 if check == True and getLight == False:
                     #set device to action
                     r = requests.put(light_url, headers=light_headers, data=light_on_payload)
@@ -158,14 +162,16 @@ def livestream():
 
                 #check return value/type for getHvac
                 getHvac = requests.put(hvac_url, headers=hvac_headers, data=hvac_check_payload)
-
-                if (checked == True or checkers == True) and getHvac == 0:
+                getHvac = json.loads(getHvac)
+                getHvac = getHvac["current_ma"]
+                
+                if (checked == True or checkers == True) and int(getHvac) == 0:
                     #set device to action
                     r = requests.put(hvac_url, headers=hvac_headers, data=hvac_on_payload) 
                     hvac = True
 
 
-                elif (checked == False or checkers == False) and getHvac == 1:
+                elif (checked == False or checkers == False) and int(getHvac) > 0:
                     #set device to action
                     r = requests.put(hvac_url, headers=hvac_headers, data=hvac_off_payload)
                     hvac = False
@@ -189,9 +195,7 @@ def livestream():
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
             
             
-    
-    
-            
+             
     @app.route('/video_feed')
     def video_feed():
         return Response(gen(video_camera),mimetype='multipart/x-mixed-replace; boundary=frame')
