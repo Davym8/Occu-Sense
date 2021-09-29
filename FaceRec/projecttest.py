@@ -61,7 +61,7 @@ hvac_off_payload = json.dumps({  "method": "passthrough",   "params": { "deviceI
 #DB variables
 ################################
 
-URI = "mongodb+srv://dylan:nph*wtz*ZGU8mup5exb@occusense.zfntf.mongodb.net/websitedata?retryWrites=true&w=majority"
+URI = 
 client = MongoClient(URI)
 db = client.controller
 devicestates = db.devicestates
