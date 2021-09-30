@@ -38,8 +38,10 @@ def HVAC_on():
     if temp is not None:
         if temp < SET_TEMP - 2:
             r = requests.put(ur2, headers=headers, data=on_payload2)
+            return
         elif temp > SET_TEMP + 2:
             r = requests.put(url2, headers=headers, data=off_payload2)
+            return
 
 def HVAC_off():
     off_payload2 = json.dumps({
