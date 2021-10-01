@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GUI</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel= "stylesheet "href="{{ url_for('static',filename='styless.css') }}">
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YW7NEF2K2"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ 'cmsType' : 'customCMS'});
+        </script>
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-TTCBMFJ');</script>
+        <!-- End Google Tag Manager -->
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-207965350-1"></script>
+        <script>
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+         gtag('config', 'UA-207965350-1');
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="Header">
+                <div class=navbar>
+                    <h1>Climate Control system</h1>
+                </div>
+            </div>
+            <div class="Sidebar">
+                <div class="data">
+                    <h1>Climate controls</h1>
+                    <form action="" method="post">
+                        <label for="fname">First name:</label>
+                        <input type="text" name="fname">
+                        <br><br>
+                        
+                        <label for="lname">Last name:</label>
+                        <input type="text" name="lname">
+                        <br><br>
+                        
+                        <label for="activatelights">Activate lights:</label>
+                        <input type="checkbox" name="aclight" value="true">
+                        
+                        <label for="triggerheater">Activate Heater:</label>
+                        <input type="checkbox" name="acheater" value="true">
+                                
+                        <label for="triggeraircon">Activate Aircon:</label>
+                        <input type="checkbox" name="acair" value="true">                   
+                        <br><br>
+                        
+                        <input type="submit" name="formdata" value="Submit">                    
+                    </form>
+                    
+                    <p>Click on the submit button to process your request.</p>
+                    <form action="https://datastudio.google.com/reporting/b831ba01-bfd6-4c69-af72-b65d1965951c">
+                        <label for="analytics"> Display analytics: </label>
+                        <input type="submit" value="Analytics Dashboard" />
+                    </form>
+                    <br>
+                </div>
+            </div>
+            <div class="Main-content">
+                <div class="content">
+                    <h1>Facial Recognition Security Feed</h1>
+                </div>
+                <div class="vid">
+                    <img id="bg" src="{{ url_for('video_feed') }}">
+                </div>
+            </div>
+            <div class="rightbar">
+                <div class="shtdwn">
+                    <h1>Shutdown Server</h1>
+                    
+                    <form action="" method="post">
+                        <label for="Username">Username:</label>
+                        <input type="text" name="usr">
+                        <br><br>
+                        
+                        <label for="pwd">Password:</label>
+                        <input type="password" name="pwd">
+                        <br><br>
+                         {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                        {% for message in messages %}           
+                            {{message}}                         
+                        {% endfor %}
+                      {% endif %}
+                    {% endwith %}                   
+                    {% block body %}{% endblock %}
+                        <br><br>
+                        
+                        <input type="submit" name="formdata" value="Submit Shutdown">
+                    </form>
+                    <p>Click on the submit button to shutdown the server.</p>
+                </div>
+            </div>
+          </div>
+    </body>
+</html>

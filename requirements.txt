@@ -1,0 +1,10 @@
+gpiozero
+Adafruit_DHT
+pickle
+flask
+requests
+pymongo
+pymongo[srv]
+picamera[array]
+opencv-python
+Flask-BasicAuth==0.2.0
