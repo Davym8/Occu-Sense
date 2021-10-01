@@ -8,9 +8,7 @@
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-0YW7NEF2K2"></script>
         <script>
         window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-            'cmsType' : 'customCMS'
-        });
+        window.dataLayer.push({ 'cmsType' : 'customCMS'});
         </script>
         <!-- Google Tag Manager -->
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -25,10 +23,8 @@
          window.dataLayer = window.dataLayer || [];
          function gtag(){dataLayer.push(arguments);}
          gtag('js', new Date());
-
          gtag('config', 'UA-207965350-1');
         </script>
-
     </head>
     <body>
         <div class="container">
@@ -50,13 +46,13 @@
                         <br><br>
                         
                         <label for="activatelights">Activate lights:</label>
-                        <input id="activatelights" type="checkbox" name="check" value="true">
+                        <input type="checkbox" name="aclight" value="true">
                         
                         <label for="triggerheater">Activate Heater:</label>
-                        <input id="triggerheater" type="checkbox" name="checked" value="true">
+                        <input type="checkbox" name="acheater" value="true">
                                 
                         <label for="triggeraircon">Activate Aircon:</label>
-                        <input id="triggeraircon" type="checkbox" name="checkers" value="true">                  
+                        <input type="checkbox" name="acair" value="true">                   
                         <br><br>
                         
                         <input type="submit" name="formdata" value="Submit">                    
@@ -64,8 +60,10 @@
                     
                     <p>Click on the submit button to process your request.</p>
                     <form action="https://datastudio.google.com/reporting/b831ba01-bfd6-4c69-af72-b65d1965951c">
+                        <label for="analytics"> Display analytics: </label>
                         <input type="submit" value="Analytics Dashboard" />
                     </form>
+                    <br>
                 </div>
             </div>
             <div class="Main-content">
